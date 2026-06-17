@@ -1,9 +1,8 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
     <div >
-    Welcome to web
+    <h1> เกี่ยวกับเรา  </h1>
+    <p> เว็บนี้สร้างขึ้นเพื่อ ...</p>
 
     </div>
   );

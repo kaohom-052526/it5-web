@@ -3,7 +3,6 @@ import Footer from "./component/Footer ";
 import Navbar from "./component/Navbar";
 import "./globals.css";
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -11,10 +10,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body >
+      <body className="layout" >
         <Navbar/>
-       
+       <div className="main-content">
         {children}
+        </div>
         <Footer/>
         </body>
     </html>
