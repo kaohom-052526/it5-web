@@ -110,7 +110,7 @@ body{
 }
 
 .auth-card {
-  width: 360px;
+  width: 560px;
   background: white;
   padding: 28px;
   border-radius: 14px;
@@ -128,7 +128,7 @@ body{
   width: 100%;
   padding: 12px;
   margin-bottom: 14px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #6fa9f0;
   border-radius: 8px;
 }
 
