@@ -64,13 +64,13 @@ export default function Navbar() {
               <Link href="/admin/users">Admin</Link>
             </li>
              <li>
-            <Link href="/admin/categories">Category</Link>
+            <Link href="/admin/Blogs">บทความ</Link>
             </li>
              <li>
-            <Link href="/admin/products">Product</Link>
+            <Link href="/admin/categories">ประเภทสินค้า</Link>
             </li>
             <li>
-            <Link href="/app/profile">Profile</Link>
+            <Link href="/app/profile">เพิ่มสินค้า</Link>
             </li>
             </>
           )}
@@ -86,13 +86,13 @@ export default function Navbar() {
               <Link href="/admin/users">Admin</Link>
             </li>
              <li>
-            <Link href="/admin/categories">Category</Link>
+            <Link href="/admin/Blogs">บทความ</Link>
             </li>
              <li>
-            <Link href="/admin/products">Product</Link>
+            <Link href="/admin/products">ประเภทสินค้า</Link>
             </li>
             <li>
-            <Link href="/app/profile">Profile</Link>
+            <Link href="/app/profile">เพิ่มสินค้า</Link>
             </li>
             </>
           )}

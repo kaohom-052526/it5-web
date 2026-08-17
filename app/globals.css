@@ -24,7 +24,7 @@ body{
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: auto;
   display: flex;
   justify-content: space-between;
@@ -97,13 +97,13 @@ body{
 }
 
 .footer-container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
 
 .auth-page {
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 150px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -127,7 +127,7 @@ body{
 .auth-card input {
   width: 100%;
   padding: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 15px;
   border: 1px solid #6fa9f0;
   border-radius: 8px;
 }
