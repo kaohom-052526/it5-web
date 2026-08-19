@@ -64,13 +64,13 @@ export default function Navbar() {
               <Link href="/admin/users">Admin</Link>
             </li>
              <li>
-            <Link href="/admin/Blogs">บทความ</Link>
+            <Link href="/blogs">บทความ</Link>
             </li>
              <li>
             <Link href="/admin/categories">ประเภทสินค้า</Link>
             </li>
             <li>
-            <Link href="/app/profile">เพิ่มสินค้า</Link>
+            <Link href="/profile">เพิ่มสินค้า</Link>
             </li>
             </>
           )}
@@ -86,8 +86,8 @@ export default function Navbar() {
               <Link href="/admin/users">Admin</Link>
             </li>
              <li>
-            <Link href="/admin/Blogs">บทความ</Link>
-            </li>
+             <Link href="/admin/blogs">Blog</Link>
+              </li>
              <li>
             <Link href="/admin/products">ประเภทสินค้า</Link>
             </li>

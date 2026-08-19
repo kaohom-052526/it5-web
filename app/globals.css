@@ -3,7 +3,7 @@
 html,
 body{
   height : 100% ;
-  margtn : 0 ;
+  margin : 0 ;
 }
 
 .layout{
@@ -103,7 +103,7 @@ body{
 
 
 .auth-page {
-  min-height: calc(100vh - 150px);
+  min-height: calc(100vh - 140px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -148,7 +148,7 @@ body{
 }
 
 .page {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: auto;
   padding: 32px;
 }

@@ -1,11 +1,9 @@
-import BlogForm from "@/components/CategoryForm";
+import BlogForm from "@/components/BlogForm";
 
-export default function blogs() {
-    return (
-        <div>
-           blogs
-           <BlogForm />
-        </div>
-    );
+export default function BlogPage() {
+  return (
+    <div>
+      <BlogForm />
+    </div>
+  );
 }
-          
