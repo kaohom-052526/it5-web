@@ -126,10 +126,10 @@ export default function ProductForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!form.imageUrl || !form.imagePublicId) {
+/*     if (!form.imageUrl || !form.imagePublicId) {
       setMessage("กรุณาอัปโหลดรูปสินค้าก่อน");
       return;
-    }
+    } */
 
     try {
       setSubmitting(true);

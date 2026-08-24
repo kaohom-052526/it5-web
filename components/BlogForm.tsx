@@ -17,7 +17,7 @@ export default function BlogForm() {
       .replace(/[^a-z0-9ก-๙-]/g, "");
   }
 
-  function handleTitleChange(value: string) {
+  function handleNameChange(value: string) {
     setTitle(value);
     setSlug(createSlug(value));
   }
@@ -67,18 +67,18 @@ export default function BlogForm() {
       onSubmit={handleSubmit}
       className="mx-auto max-w-xl space-y-4 rounded-xl border p-6"
     >
-      <h1 className="text-2xl font-bold">เพิ่มบทความ</h1>
+      <h1 className="text-2xl font-bold">เพิ่มข้อมูล</h1>
 
       <div>
         <label className="mb-1 block font-medium">
-          ชื่อบทความ
+          ชื่อข้อมูล
         </label>
 
         <input
           type="text"
           value={title}
           onChange={(event) =>
-            handleTitleChange(event.target.value)
+            handleNameChange(event.target.value)
           }
           className="w-full rounded-lg border px-3 py-2"
           required
@@ -86,7 +86,7 @@ export default function BlogForm() {
       </div>
 
       <div>
-        <label className="mb-1 block font-medium">Slug</label>
+        <label className="mb-1 block">Slug</label>
 
         <input
           type="text"

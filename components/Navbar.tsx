@@ -1,9 +1,10 @@
+
 "use client";
 
 import Link from "next/link";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type User = {
   name: string;
@@ -16,17 +17,42 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   // const [open, setOpen] = useState(false);
 
+  // Refresh user state when route changes, because Navbar stays mounted in the root layout.
   useEffect(() => {
+    let ignore = false;
+
     async function loadUser() {
-      const res = await fetch("/api/auth/me");
+      const res = await fetch("/api/auth/me", { cache: "no-store" });
       const data = await res.json();
-      setUser(data.user);
+
+      if (!ignore) {
+        setUser(data.user);
+      }
     }
 
     loadUser();
+
+    return () => {
+      ignore = true;
+    };
+  }, [pathname]);
+
+  // Login/logout pages dispatch this event so Navbar updates immediately without a full reload.
+  useEffect(() => {
+    function handleAuthChange(event: Event) {
+      const authEvent = event as CustomEvent<{ user: User | null }>;
+      setUser(authEvent.detail?.user ?? null);
+    }
+
+    window.addEventListener("auth-change", handleAuthChange);
+
+    return () => {
+      window.removeEventListener("auth-change", handleAuthChange);
+    };
   }, []);
 
   async function logout() {
@@ -35,6 +61,10 @@ export default function Navbar() {
     });
 
     setUser(null);
+    // Keep all mounted auth-aware components in sync after logout.
+    window.dispatchEvent(
+      new CustomEvent("auth-change", { detail: { user: null } })
+    );
     router.push("/login");
     router.refresh();
   }
@@ -44,7 +74,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container">
         <Link href="/" className="logo">
-          Kaohom
+          ROBOT SHOP
         </Link>
 
         <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
@@ -58,22 +88,13 @@ export default function Navbar() {
           <li>
             <Link href="/about">เกี่ยวกับเรา</Link>
           </li>
-        {user?.role === "admin" && (
-            <>
-            <li>
-              <Link href="/admin/users">Admin</Link>
-            </li>
-             <li>
+           <li>
+            <Link href="/products">สินค้า</Link>
+          </li>
+          <li>
             <Link href="/blogs">บทความ</Link>
-            </li>
-             <li>
-            <Link href="/admin/categories">ประเภทสินค้า</Link>
-            </li>
-            <li>
-            <Link href="/profile">เพิ่มสินค้า</Link>
-            </li>
-            </>
-          )}
+          </li>
+
           {user && (
             <li>
               <Link href="/dashboard">Dashboard</Link>
@@ -82,18 +103,18 @@ export default function Navbar() {
 
           {user?.role === "admin" && (
             <>
-            <li>
-              <Link href="/admin/users">Admin</Link>
-            </li>
-             <li>
-             <Link href="/admin/blogs">Blog</Link>
+              <li>
+                <Link href="/admin/users">Admin</Link>
               </li>
-             <li>
-            <Link href="/admin/products">ประเภทสินค้า</Link>
-            </li>
-            <li>
-            <Link href="/app/profile">เพิ่มสินค้า</Link>
-            </li>
+              <li>
+                <Link href="/admin/blogs">Blog</Link>
+              </li>
+              <li>
+                <Link href="/admin/categories">เพิ่มหมวดหมู่</Link>
+              </li>
+              <li>
+                <Link href="/admin/products">เพิ่มสินค้า</Link>
+              </li>
             </>
           )}
 
@@ -111,9 +132,10 @@ export default function Navbar() {
           ) : (
             <>
               <li className="user-info">
-                <Link href="/profile">
-                  {user.name} ({user.role})
-                </Link>
+                {user.name} ({user.role})
+              </li>
+              <li>
+                <Link href="/profile">Profile</Link>
               </li>
               <li>
                 <button onClick={logout} className="btn-logout">
