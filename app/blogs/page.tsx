@@ -1,84 +1,78 @@
-import type { Metadata } from "next";
+import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 
-export const metadata: Metadata = {
-  title: "บทความ",
-  description: "รวมบทความและข่าวสารล่าสุด",
-};
+export async function GET() {
+  try {
+    await connectDB();
 
-export const dynamic = "force-dynamic";
+    const blog = await Blog.find()
+      .sort({ title: 1 })
+      .lean();
 
-export default async function BlogsPage() {
-  await connectDB();
+    return NextResponse.json({
+      blog,
+    });
+  } catch (error) {
+    console.error("GET blog error:", error); // แก้ข้อความ log ให้ตรงกัน
 
-  const blogs = await Blog.find()
-    .sort({ createdAt: -1 })
-    .lean();
+    return NextResponse.json(
+      { message: "ไม่สามารถโหลดข้อมูลได้" },
+      { status: 500 }
+    );
+  }
+}
 
-  const serializedBlogs = blogs.map((blog) => ({
-    _id: blog._id.toString(),
-    title: String(blog.title ?? ""),
-    slug: String(blog.slug ?? ""),
-    content: String(blog.content ?? ""),
-    createdAt: blog.createdAt
-      ? new Date(blog.createdAt).toLocaleDateString("th-TH", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        })
-      : "",
-  }));
+export async function POST(request: Request) {
+  try {
+    await connectDB();
 
-  return (
-    <main className="mx-auto w-full max-w-7xl px-6 py-10">
-      <header className="mb-8">
-        <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-green-700">
-          Blog
-        </p>
-        <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-          บทความทั้งหมด
-        </h1>
-        <p className="mt-3 max-w-2xl text-gray-600">
-          ติดตามบทความ ข่าวสาร และเรื่องราวล่าสุดจากเรา
-        </p>
-      </header>
+    const body = await request.json();
 
-      {serializedBlogs.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-16 text-center text-gray-500">
-          ยังไม่มีบทความ
-        </div>
-      ) : (
-        <section
-          aria-label="รายการบทความ"
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {serializedBlogs.map((blog) => (
-            <article
-              key={blog._id}
-              className="flex min-h-64 flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-              {blog.createdAt && (
-                <time className="text-sm text-gray-500">
-                  {blog.createdAt}
-                </time>
-              )}
+    // เปลี่ยนชื่อตัวแปรให้ตรงกับการใช้งานด้านล่าง หรือใช้ title / content ไปเลย
+    const title = String(body.title ?? "").trim();
+    const slug = String(body.slug ?? "")
+      .trim()
+      .toLowerCase();
+    const content = String(body.content ?? "").trim(); // เปลี่ยนจาก description เป็น content
 
-              <h2 className="mt-3 text-xl font-bold text-gray-900">
-                {blog.title}
-              </h2>
+    if (!title || !slug) {
+      return NextResponse.json(
+        { message: "กรุณากรอกชื่อและ slug" },
+        { status: 400 }
+      );
+    }
 
-              {blog.slug && (
-                <p className="mt-1 text-sm text-green-700">#{blog.slug}</p>
-              )}
+    const existingBlog = await Blog.findOne({
+      $or: [{ title }, { slug }],
+    });
 
-              <p className="mt-4 line-clamp-5 whitespace-pre-line text-sm leading-7 text-gray-600">
-                {blog.content || "บทความนี้ยังไม่มีรายละเอียด"}
-              </p>
-            </article>
-          ))}
-        </section>
-      )}
-    </main>
-  );
+    if (existingBlog                        ) {
+      return NextResponse.json(
+        { message: "ชื่อหรือ slug นี้มีอยู่แล้ว" },
+        { status: 409 }
+      );
+    }
+
+    const blog = await Blog.create({
+      title,
+      slug,
+      content,
+    });
+
+    return NextResponse.json(
+      {
+        message: "เพิ่มข้อมูลสำเร็จ",
+        blog,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("POST error:", error);
+
+    return NextResponse.json(
+      { message: "ไม่สามารถเพิ่มข้อมูลได้" },
+      { status: 500 }
+    );
+  }
 }
