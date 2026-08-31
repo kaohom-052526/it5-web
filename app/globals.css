@@ -7,7 +7,7 @@ body{
 }
 
 .layout{
-  min-height: 100vh;
+  min-height: 150vh;
   display:  flex;
   flex-direction: column;
 }
@@ -66,7 +66,7 @@ body{
 }
 
 /* Mobile */
-@media (max-width: 768px) {
+@media (max-width: 780px) {
   .menu-btn {
     display: block;
   }
@@ -103,7 +103,7 @@ body{
 
 
 .auth-page {
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 150px);
   display: flex;
   justify-content: center;
   align-items: center;

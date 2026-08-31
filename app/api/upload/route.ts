@@ -8,8 +8,28 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const allowedTypes = [
   "image/jpeg",
   "image/png",
+  "image/jpg",
   "image/webp",
 ];
+
+function getUploadErrorStatus(error: unknown) {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "http_code" in error &&
+    typeof error.http_code === "number"
+  ) {
+    const { http_code: httpCode } = error;
+
+    // Keep client errors from Cloudinary intact. Turning a permission error into
+    // 502 obscures the actual cause and makes it look like our API is down.
+    if (httpCode >= 400 && httpCode < 500) {
+      return httpCode;
+    }
+  }
+
+  return 502;
+}
 
 export async function POST(request: Request) {
   try {
@@ -88,9 +108,18 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Upload error:", error);
 
+    const status = getUploadErrorStatus(error);
+
     return NextResponse.json(
-      { message: "เกิดข้อผิดพลาดในการอัปโหลดรูป" },
-      { status: 500 }
+      {
+        message:
+          status === 401
+            ? "ไม่สามารถยืนยันตัวตนกับ Cloudinary ได้ โปรดตรวจสอบ API key และ API secret"
+            : status === 403
+              ? "Cloudinary ไม่อนุญาตให้ API key นี้อัปโหลดรูป โปรดตรวจสอบสิทธิ์ Upload ของ API key หรือการตั้งค่า Security ใน Cloudinary"
+              : "เกิดข้อผิดพลาดในการอัปโหลดรูป",
+      },
+      { status }
     );
   }
 }

@@ -3,7 +3,13 @@ import BlogCard from "@/components/BlogCard";
 export default function Home() {
   return (
     <div >
-      <BlogCard/>
+      <BlogCard blog={{
+        _id: "",
+        title: undefined,
+        slug: undefined,
+        content: undefined,
+        createdAt: undefined
+      }}/>
 
     </div>
   );

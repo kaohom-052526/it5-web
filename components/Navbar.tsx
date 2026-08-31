@@ -74,7 +74,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container">
         <Link href="/" className="logo">
-          ROBOT SHOP
+          ข้าวบูด
         </Link>
 
         <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
@@ -150,3 +150,4 @@ export default function Navbar() {
     </nav>
   );
 }
+
